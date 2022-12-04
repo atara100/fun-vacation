@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import Title from "../components/Title";
 import { data, Offer } from "../data/offers";
 
@@ -10,7 +11,7 @@ function Order() {
     const [name,setName]=useState<string>('');
     const [email,setEmail]=useState<string>('');
     const [agree,setAgree]=useState<boolean>(false);
-    const [error,setError]=useState<string>('')
+    const [error,setError]=useState<string>('');
 
     function handleSubmit(e:React.FormEvent){
       e.preventDefault(); //cancel the default action of the form reload the page
@@ -31,7 +32,8 @@ function Order() {
         return;
       }
       setError("");
-
+      toast.success('success! continue to checkout...');
+      
     }  
 
     return ( 
@@ -78,7 +80,7 @@ function Order() {
 
                     <div className="form-check mt-4">
                       <input type="checkbox" className="form-check-input" 
-                             checked={agree} onClick={()=> setAgree(!agree)}
+                             checked={agree} onChange={()=> setAgree(!agree)}
                       />
                       <label className="form-check-label">
                         I agree to terms...
