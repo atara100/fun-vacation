@@ -8,6 +8,10 @@ function Header() {
         <i className="bi bi-airplane me-2"></i>
       Fun Vacation
     </NavLink>
+
+    <NavLink className="navbar-brand" to="/vacations">
+        Vacations
+    </NavLink>
     
     <ul className="navbar-nav">
         <li className="nav-item">

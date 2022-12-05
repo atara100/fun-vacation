@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { data, Offer } from "../../data/offers";
+import { formatPrice } from "../../utils/utils";
 
 enum SortDirection{
     asc='asc', //A-Z
@@ -8,28 +9,51 @@ enum SortDirection{
 
 function OffersTable() {
     const [offers,setOffers]=useState<Array<Offer>>(data);
-        const [search,setSearch]=useState<string>('');
-        const [sort,setSort]=useState<SortDirection>(SortDirection.asc);
+    const [search,setSearch]=useState<string>('');
+    const [sort,setSort]=useState<SortDirection>(SortDirection.asc);
 
-
-    function formatPrice(value: number): string {
-         return `${value}$`;
-    }
 
     function handleSort(value:string){
         const direction = value as  SortDirection;
         setSort(direction);
+        
+        let result = [...data];
+        if(direction===SortDirection.desc){        
+         result.sort((a, b) =>
+           a.location > b.location ? -1 :
+             a.location < b.location ?  1 :
+               0
+          )}
+          else{
+            result.sort((a, b) =>
+           a.location < b.location ? -1 :
+             a.location > b.location ?  1 :
+               0
+            );
+          }
+         setOffers(result);
+    }
+
+    function handleSearch(value:string){
+      setSearch(value);
+      const term=value.toLowerCase();
+       let result=[...data];
+       if(term.length>0){
+        result=[...data].filter(offer=>offer.location.toLowerCase().includes(term));
+       }
+       setOffers(result);
+      
     }
 
     return ( 
     <>
      <div className="d-flex px-4 w-50 my-5 bg-light">
         <input type="text"placeholder="Search"className="form-control me-4"
-            value={search} onChange={(e)=>setSearch(e.target.value)}/>
+            value={search} onChange={(e)=>handleSearch(e.target.value)}/>
          <select className="form-select"
                  value={sort} onChange={(e)=>handleSort(e.target.value)}>
-          <option>Location A-Z</option>
-          <option>Location Z-A</option></select>
+          <option value={SortDirection.asc}>Location A-Z</option>
+          <option value={SortDirection.desc}>Location Z-A</option></select>
       </div>
 
       {
