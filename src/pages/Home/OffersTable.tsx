@@ -1,23 +1,40 @@
-import { useState } from "react";
-import { data, Offer } from "../../data/offers";
+import { useEffect, useState } from "react";
+import { getToken } from "../../auth/tokenMgmt";
 import { formatPrice } from "../../utils/utils";
+import { IVacation } from "../Vacations/Vacations";
 
 enum SortDirection{
     asc='asc', //A-Z
     desc='desc' //Z-A
 }
 
+
 function OffersTable() {
-    const [offers,setOffers]=useState<Array<Offer>>(data);
+    const [offers,setOffers]=useState<Array<IVacation>>([]);
     const [search,setSearch]=useState<string>('');
     const [sort,setSort]=useState<SortDirection>(SortDirection.asc);
+
+    function fetchOffers(){
+        fetch('http://localhost:3000/vacations/',{
+          method:'GET',
+          headers:{
+            'x-auth-token': getToken()
+          }
+        })
+            .then(res=>res.json())
+            .then(json=>{
+                setOffers(json)
+            })
+    }
+
+    useEffect(fetchOffers,[])
 
 
     function handleSort(value:string){
         const direction = value as  SortDirection;
         setSort(direction);
         
-        let result = [...data];
+        let result = [...offers];
         if(direction===SortDirection.desc){        
          result.sort((a, b) =>
            a.location > b.location ? -1 :
@@ -37,9 +54,9 @@ function OffersTable() {
     function handleSearch(value:string){
       setSearch(value);
       const term=value.toLowerCase();
-       let result=[...data];
+       let result=[...offers];
        if(term.length>0){
-        result=[...data].filter(offer=>offer.location.toLowerCase().includes(term));
+        result=[...offers].filter(offer=>offer.location.toLowerCase().includes(term));
        }
        setOffers(result);
       
@@ -57,7 +74,7 @@ function OffersTable() {
       </div>
 
       {
-        data.length === 0  ?
+        offers.length === 0  ?
         <div className="text-danger m-5">
           Error: no offers are available.
         </div>
@@ -74,11 +91,12 @@ function OffersTable() {
         
         <tbody>
           {
-            offers.map((offer:Offer)=>
-              <tr key={offer.id}>
+            offers.map((offer:IVacation)=>
+              <tr key={offer._id}>
                 <td>{offer.date}</td>
                 <td>{offer.location}</td>
                 <td>{ formatPrice(offer.price)}</td>
+
               </tr>
             )
             }
@@ -86,7 +104,6 @@ function OffersTable() {
       </table>  
         )
       }
-      
        
     </> 
     );

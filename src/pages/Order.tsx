@@ -1,17 +1,30 @@
 import Joi from "joi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Title from "../components/Title";
-import { data, Offer } from "../data/offers";
+import { getRequest } from "../services/apiService";
+import { IVacation } from "./Vacations/Vacations";
 
 
 function Order() {
     
+  const [listVacations,setListVacations]=useState<Array<IVacation>>([])
     const [vacation,setVacation]=useState<string>('');
     const [name,setName]=useState<string>('');
     const [email,setEmail]=useState<string>('');
     const [agree,setAgree]=useState<boolean>(false);
     const [error,setError]=useState<string>('');
+
+    function fetchOffers(){
+      const res=getRequest(`vacations/`);
+       if(!res) return;
+        res.then(res=>res.json())
+            .then(json=>{
+                setListVacations(json)
+            })
+    }
+
+    useEffect(fetchOffers,[])
 
     function handleSubmit(e:React.FormEvent){
       e.preventDefault(); //cancel the default action of the form reload the page
@@ -43,7 +56,7 @@ function Order() {
                sub="quickly order a nea vacation"
             />
             {
-                data.length>0 &&
+                listVacations.length>0 &&
 
                 <main className="p-5">
                 <h4 className="mb-3">Billing address</h4>
@@ -55,8 +68,8 @@ function Order() {
                                 value={vacation} onChange={(e)=>setVacation(e.target.value)}>
                             <option value="">Please select...</option>
                                 {                                   
-                                    data.map((offer:Offer)=>
-                                        <option key={offer.id} value={offer.id}>
+                                    listVacations.map((offer:IVacation)=>
+                                        <option key={offer._id} value={offer._id}>
                                             {offer.location}
                                         </option>
                                     )
