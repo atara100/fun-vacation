@@ -1,14 +1,15 @@
-interface Props {
-    userName: string;
-}
+import { useContext } from "react";
+import { AppContext } from "../App";
 
+function User() {
 
-function User({ userName }: Props) {
-    if (!userName) return null;
+    const context=useContext(AppContext);
+    if(!context) return <div>Error</div>;
+
 
     return (
         <div>
-            Hello {userName}
+            Hello {context.userName}
         </div>
     );
 }
