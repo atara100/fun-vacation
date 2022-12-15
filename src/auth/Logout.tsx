@@ -1,17 +1,15 @@
-import { useNavigate } from "react-router-dom";
+interface Props {
+    handler: Function;
+}
 
-function Logout() {
-    const navigate= useNavigate();
-
-    function handleLogout(){
-        localStorage.clear()
-        navigate('/login');
-    }
-
+function Logout({ handler }: Props) {
     return (
-       <a className="nav-link" onClick={handleLogout}>
-         Log Out
-       </a>
+        <button
+            onClick={(e) => handler()}
+            className="btn btn-link nav-link"
+        >
+            Log Out
+        </button>
     );
 }
 

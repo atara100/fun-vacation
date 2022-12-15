@@ -1,23 +1,17 @@
-import { useEffect, useState } from "react";
-
-function User() {
-   
-    const [name,setName]=useState('');
-    
-    useEffect(()=>{
-       const nameLocalstorage=localStorage.getItem('user');
-
-
-    },[])
-
-    return ( 
-        <>
-        {
-            !name ? null : (<div > Hello {name} </div>)
-        }
-        </>
-       
-     );
+interface Props {
+    userName: string;
 }
+
+
+function User({ userName }: Props) {
+    if (!userName) return null;
+
+    return (
+        <div>
+            Hello {userName}
+        </div>
+    );
+}
+
 
 export default User;

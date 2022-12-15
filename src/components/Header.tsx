@@ -1,9 +1,14 @@
 import { NavLink } from "react-router-dom";
 import Logout from "../auth/Logout";
 import User from "./User";
+interface Props{
+    userName: string;
+    handleLogout:Function;
+}
+
+function Header({userName,handleLogout}:Props) {
 
 
-function Header() {
     return ( 
 <header>
    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -20,6 +25,17 @@ function Header() {
 
      <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                          
+                            <li className="nav-item">
+                                <NavLink
+                                    className="nav-link"
+                                    aria-current="page"
+                                    to="/order"
+                                >
+                                    Order Now
+                                </NavLink>
+                            </li>
+
                             <li className="nav-item">
                                 <NavLink
                                     className="nav-link"
@@ -41,15 +57,7 @@ function Header() {
                         </ul>
 
                         <ul className="navbar-nav d-flex">
-                            <li className="nav-item">
-                                <NavLink
-                                    className="nav-link"
-                                    aria-current="page"
-                                    to="/order"
-                                >
-                                    Order Now
-                                </NavLink>
-                            </li>
+
                             <li className="nav-item">
                                 <NavLink
                                     className="nav-link"
@@ -69,14 +77,14 @@ function Header() {
                                 </NavLink>
                             </li>
                             <li className="nav-item">
-                                <Logout/>
+                                <Logout handler={handleLogout}/>
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
 
-            <User/>
+            <User userName={userName}/>
         </header>
     );
 }
