@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { createContext, useEffect, useState } from "react";
+import Panel from "../../components/Panel";
 import Title from "../../components/Title";
 import { deleteRequest, getRequest } from "../../services/apiService";
-import { formatDate, formatPrice } from "../../utils/utils";
 import AddForm from "./AddForm";
+import TableRows from "./TableRows";
  
 export interface IVacation{
     _id:number;
@@ -12,10 +12,12 @@ export interface IVacation{
     price:number;
 }
 
+//context:
+export const VacationContext = createContext<Array<IVacation>>([]);
+
 function Vacations() {
 
     const [vacations,setVacations]=useState<Array<IVacation>>([]);
-
     function getVacations(){
        const res=getRequest('vacations');
          if(!res) return;
@@ -47,7 +49,7 @@ function Vacations() {
 
 
     return (  
-        <>
+     <VacationContext.Provider value={vacations}>
        <Title main= "Vacations" sub="manage vacation packages"/>
 
        {
@@ -55,6 +57,7 @@ function Vacations() {
          <div className="alert alert-info m-5">No vacations</div>
        }
 
+      <Panel>
        <AddForm addVacation={addVacation}/>
 
       <table className="table table-hover">
@@ -69,25 +72,13 @@ function Vacations() {
         
         <tbody>
           {
-            vacations.map((vacation)=>
-              <tr key={vacation._id}>
-                <td>{formatDate(vacation.date)}</td>
-                <td>{vacation.location}</td>
-                <td>{ formatPrice(vacation.price)}</td>
-                <td>
-                  <div className="d-flex">
-                    <Link  to={`/edit/${vacation._id}`}  className="btn btn-default">
-                      <i className="bi-pen"></i>
-                    </Link>
-                    <button onClick={()=>delVacation(vacation)} className="btn btn-default"><i className="bi-trash"></i></button>                
-                  </div>
-                </td>
-              </tr>
-            )
+            <TableRows delVacation={delVacation}/>
             }
         </tbody>
       </table> 
-        </>
+     </Panel>
+    </VacationContext.Provider>
+
      );
 }
 
