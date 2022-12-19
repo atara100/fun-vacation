@@ -1,9 +1,13 @@
+import { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { AppContext } from "../App";
 import Logout from "../auth/Logout";
 import User from "./User";
 
 function Header() {
-
+    const context=useContext(AppContext);
+    const isLogedin=context && context.userName.length > 0;
+    
     return ( 
 <header>
    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -40,19 +44,26 @@ function Header() {
                                     Vacations
                                 </NavLink>
                             </li>
-                            <li className="nav-item">
-                                <NavLink
-                                    className="nav-link"
-                                    aria-current="page"
-                                    to="/admin"
-                                >
-                                    Admin Only
-                                </NavLink>
-                            </li>
+
+                            {
+                                context && context.isAdmin &&
+                                  <li className="nav-item">
+                                            <NavLink
+                                          className="nav-link"
+                                          aria-current="page"
+                                          to="/admin"
+                                      >
+                                          Admin Only
+                                      </NavLink>
+                                  </li>
+                            }
+                            
                         </ul>
 
                         <ul className="navbar-nav d-flex">
-
+                           {
+                            !isLogedin &&
+                            <>
                             <li className="nav-item">
                                 <NavLink
                                     className="nav-link"
@@ -71,9 +82,15 @@ function Header() {
                                     Login
                                 </NavLink>
                             </li>
-                            <li className="nav-item">
-                                <Logout />
-                            </li>
+                            </>
+                           }
+
+                           {
+                            isLogedin &&                       
+                              <li className="nav-item">
+                                  <Logout />
+                              </li>
+                           } 
                         </ul>
                     </div>
                 </div>

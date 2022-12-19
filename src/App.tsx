@@ -31,13 +31,14 @@ export const AppContext = createContext<Context | null>(null);
 
 function App() {
 
-const [userName, setUserName] = useState('');
-const [isAdmin, setIsAdmin] = useState(false);
+const [userName, setUserName] = useState<string>('');
+const [isAdmin, setIsAdmin] = useState<boolean>(false);
 const navigate = useNavigate();
 
     function handleLogout() {
         localStorage.clear();
         setUserName('');
+        setIsAdmin(false)
         navigate('/login');
     }
 
@@ -47,7 +48,6 @@ const navigate = useNavigate();
            res.then(response => response.json())
             .then(json => {
                 setToken(json.token);
-                localStorage.setItem('admin',json.isAdmin);
                 setIsAdmin(json.isAdmin);
                 setUserName(json.name);
                 navigate('/vacations');

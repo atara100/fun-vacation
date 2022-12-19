@@ -1,8 +1,11 @@
+import { useContext } from "react";
+import { AppContext } from "../App";
+
 function AdminOnly() {
 
-        const admin=localStorage.getItem('admin');
+        const context=useContext(AppContext);
 
-        if(admin==="true"){
+        if(context && context.isAdmin){
             return(
             <h2 className="text-center">Welcome to admin page!</h2>
             )
